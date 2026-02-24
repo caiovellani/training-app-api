@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "devDependencies": {
     "@types/node": "^24.10.13",
     "eslint": "^9.39.2",
