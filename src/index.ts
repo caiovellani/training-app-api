@@ -22,7 +22,7 @@ await app.register(fastifySwagger, {
   openapi: {
     info: {
       title: "Training API",
-      description: "API para um app de",
+      description: "API para um app de treinos",
       version: "1.0.0",
     },
     servers: [
