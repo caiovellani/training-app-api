@@ -2,7 +2,7 @@ import "dotenv/config";
 
 import fastifyCors from "@fastify/cors";
 import { fastifySwagger } from "@fastify/swagger";
-import { fastifySwaggerUi } from "@fastify/swagger-ui";
+import fastifyApiReference from "@scalar/fastify-api-reference";
 import Fastify from "fastify";
 import {
   jsonSchemaTransform,
@@ -38,10 +38,6 @@ await app.register(fastifySwagger, {
   transform: jsonSchemaTransform,
 });
 
-await app.register(fastifySwaggerUi, {
-  routePrefix: "/docs",
-});
-
 await app.register(fastifyCors, {
   origin: ["http://localhost:3000"],
   credentials: true,
@@ -66,8 +62,10 @@ app.route({
         headers,
         ...(request.body ? { body: JSON.stringify(request.body) } : {}),
       });
+
       // Process authentication request
       const response = await auth.handler(req);
+
       // Forward response to client
       reply.status(response.status);
       response.headers.forEach((value, key) => reply.header(key, value));
@@ -79,6 +77,24 @@ app.route({
         code: "AUTH_FAILURE",
       });
     }
+  },
+});
+
+await app.register(fastifyApiReference, {
+  routePrefix: "/docs",
+  configuration: {
+    sources: [
+      {
+        title: "Training App API",
+        slug: "training-api",
+        url: "/swagger.json",
+      },
+      {
+        title: "Auth API",
+        slug: "auth-api",
+        url: "/api/auth/open-api/generate-schema",
+      },
+    ],
   },
 });
 
